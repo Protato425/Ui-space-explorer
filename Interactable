@@ -1,0 +1,46 @@
+using UnityEngine;
+using UnityEngine.EventSystems; // Required for detecting UI interactions
+
+public class ToggleFurnaceUI : MonoBehaviour, IInteractable
+{
+
+    public GameObject FurnaceUI;
+    //public GameObject InvBg;
+    private bool isUIActive = false;
+
+
+    public void Interact()
+    {
+        // Toggle the active state of the FurnaceUI and InvBg
+        isUIActive = !isUIActive;
+        if (FurnaceUI != null)
+        {
+            Debug.Log("fuga");
+            FurnaceUI.SetActive(isUIActive);
+            Debug.Log("fuga open");
+            //InvBg.SetActive(isUIActive);
+        }
+        else
+        {
+            Debug.LogError("FurnaceUI or InvBg GameObject is not assigned in the Inspector.");
+        }
+    }
+
+    void Update()
+    {
+        // If the FurnaceUI is active and any key is pressed
+        if (isUIActive && Input.anyKeyDown)
+        {
+            // Check if the mouse click is not on a UI element
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                isUIActive = false;
+                if (FurnaceUI != null)
+                {
+                    FurnaceUI.SetActive(false);
+                    //InvBg.SetActive(false);
+                }
+            }
+        }
+    }
+}
