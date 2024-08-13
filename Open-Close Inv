@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class OpenInv : MonoBehaviour
+{
+    // Reference to the UI window GameObject
+    public GameObject inventoryUI;
+
+    // References to the open and close buttons
+    public GameObject openButton;
+    public GameObject closeButton;
+
+    // Track the inventory state
+    private bool isInventoryOpen = false;
+
+    void Update()
+    {
+        // Check if the Q key is pressed
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ToggleInventory();
+        }
+
+        // Update button visibility based on the inventory state
+        UpdateButtonVisibility();
+    }
+
+    void ToggleInventory()
+    {
+        // Toggle the active state of the inventory UI
+        if (inventoryUI != null)
+        {
+            isInventoryOpen = !isInventoryOpen;
+            inventoryUI.SetActive(isInventoryOpen);
+        }
+        else
+        {
+            Debug.LogError("Inventory UI GameObject is not assigned in the Inspector.");
+        }
+    }
+
+    void UpdateButtonVisibility()
+    {
+        if (openButton != null && closeButton != null)
+        {
+            openButton.SetActive(!isInventoryOpen);
+            closeButton.SetActive(isInventoryOpen);
+        }
+        else
+        {
+            Debug.LogError("OpenButton or CloseButton GameObject is not assigned in the Inspector.");
+        }
+    }
+
+    // Methods to be called by the buttons
+    public void OpenInventory()
+    {
+        isInventoryOpen = true;
+        inventoryUI.SetActive(true);
+        UpdateButtonVisibility();
+    }
+
+    public void CloseInventory()
+    {
+        isInventoryOpen = false;
+        inventoryUI.SetActive(false);
+        UpdateButtonVisibility();
+    }
+}
