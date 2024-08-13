@@ -1,0 +1,53 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+interface IInteractable
+{
+    void Interact();
+}
+
+public class Interactor : MonoBehaviour
+{
+    public Transform InteractorSource;
+    public float InteractRange;
+
+    // Number of rays to be cast
+    public int numberOfRays = 1;
+
+    // List of ray directions
+    public List<Vector3> rayDirections = new List<Vector3>();
+
+    void Start()
+    {
+        // Initialize the ray directions list with the forward direction if empty
+        if (rayDirections.Count == 0)
+        {
+            rayDirections.Add(Vector3.forward);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("e pressed");
+            for (int i = 0; i < numberOfRays; i++)
+            {
+                // Ensure we do not go out of bounds
+                Vector3 direction = i < rayDirections.Count ? rayDirections[i] : Vector3.forward;
+                Ray Interactor_ray = new Ray(InteractorSource.position, InteractorSource.TransformDirection(direction));
+                if (Physics.Raycast(Interactor_ray, out RaycastHit hitInfo, InteractRange))
+                {
+                    Debug.Log("ray casted");
+                    if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+                    {
+                        Debug.Log("ray hit");
+                        interactObj.Interact();
+                        break; // Optionally break if you only want the first interaction
+                    }
+                }
+            }
+        }
+    }
+}
